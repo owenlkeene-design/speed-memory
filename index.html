@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>speed memory</title>
+</head>
+<body>
+
+  <button onclick="generateNumber(1300, 6)">
+    Generate Number
+  </button>
+  <button onclick="generateNumber(1000, 6)">
+    Generate Number hard
+  </button>
+  <button onclick="generateNumber(2000, 12)">
+    Generate Number mega hard
+  </button>
+  <input type="number" id="myInput" min="100000" max="999999999999" placeholder="Enter your 6- or 12-digit guess">
+  <button onclick="checkGuess()">Check Guess</button>
+
+  <p id="display-area"></p>
+  <p id="feedback" aria-live="polite"></p>
+
+  <script>
+    let answer;
+    let answerDigits;
+    let clearNumberTimeout;
+
+    function generateNumber(displayDuration, digits) {
+      answerDigits = digits;
+      const minimum = 10 ** (digits - 1);
+      answer = Math.floor(Math.random() * (9 * minimum)) + minimum;
+      document.getElementById('display-area').innerText = answer;
+      document.getElementById('feedback').innerText = '';
+
+      clearTimeout(clearNumberTimeout);
+      clearNumberTimeout = setTimeout(() => {
+        document.getElementById('display-area').innerText = '';
+      }, displayDuration);
+    }
+
+    function checkGuess() {
+      const guess = Number(document.getElementById('myInput').value);
+      const feedback = document.getElementById('feedback');
+
+      if (answer === undefined) {
+        feedback.innerText = 'Generate a number first.';
+      } else {
+        const minimum = 10 ** (answerDigits - 1);
+        const maximum = 10 ** answerDigits - 1;
+
+        if (!Number.isSafeInteger(guess) || guess < minimum || guess > maximum) {
+          feedback.innerText = `Enter a ${answerDigits}-digit whole number.`;
+        } else if (guess === answer) {
+          feedback.innerText = 'Correct! You guessed the number.';
+        } else {
+          feedback.innerText = 'Not quite. Try again!';
+        }
+      }
+    }
+  </script>
+</body>
+</html>
